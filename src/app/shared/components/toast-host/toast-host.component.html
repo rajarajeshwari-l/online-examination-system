@@ -1,0 +1,16 @@
+<div class="oes-toast-stack" role="status" aria-live="polite">
+  @for (toast of toasts(); track toast.id) {
+    <div class="oes-toast oes-toast--{{ toast.variant }} oes-slide-up">
+      <mat-icon class="oes-toast__icon">{{ iconFor(toast.variant) }}</mat-icon>
+      <div class="oes-toast__body">
+        <p class="oes-toast__title">{{ toast.title }}</p>
+        @if (toast.description) {
+          <p class="oes-toast__description">{{ toast.description }}</p>
+        }
+      </div>
+      <button mat-icon-button class="oes-toast__close" (click)="dismiss(toast.id)" aria-label="Dismiss notification">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+</div>

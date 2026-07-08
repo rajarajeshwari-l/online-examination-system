@@ -1,0 +1,77 @@
+@if (report(); as reportData) {
+  <div class="oes-page-container oes-page-container--narrow">
+    <oes-page-header [title]="reportData.examTitle" subtitle="Your detailed exam performance breakdown.">
+      <div actions>
+        <a mat-stroked-button routerLink="/student/attempts">
+          <mat-icon>arrow_back</mat-icon>
+          All Attempts
+        </a>
+        <button mat-flat-button color="primary" (click)="exportPdf()">
+          <mat-icon>picture_as_pdf</mat-icon>
+          Export PDF
+        </button>
+      </div>
+    </oes-page-header>
+
+    <div class="oes-card oes-result__summary">
+      <div class="oes-result__summary-chart">
+        <oes-donut-chart [data]="breakdownSegments()" centerLabel="Questions"></oes-donut-chart>
+      </div>
+      <div class="oes-result__summary-details">
+        <div class="oes-result__score-row">
+          <span class="oes-result__score-value">{{ reportData.attempt.score }} / {{ reportData.attempt.totalMarks }}</span>
+          <oes-status-badge [label]="reportData.attempt.passed ? 'Passed' : 'Failed'" [tone]="reportData.attempt.passed ? 'success' : 'danger'"></oes-status-badge>
+        </div>
+        <p class="oes-result__percentage">{{ reportData.attempt.percentage }}% Score</p>
+        <div class="oes-result__stat-grid">
+          <div class="oes-result__stat">
+            <span class="oes-result__stat-value oes-result__stat-value--success">{{ reportData.attempt.correctCount }}</span>
+            <span class="oes-result__stat-label">Correct</span>
+          </div>
+          <div class="oes-result__stat">
+            <span class="oes-result__stat-value oes-result__stat-value--danger">{{ reportData.attempt.incorrectCount }}</span>
+            <span class="oes-result__stat-label">Incorrect</span>
+          </div>
+          <div class="oes-result__stat">
+            <span class="oes-result__stat-value">{{ reportData.attempt.unansweredCount }}</span>
+            <span class="oes-result__stat-label">Unanswered</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="oes-result__breakdown-title">Question-by-Question Review</h3>
+    <div class="oes-result__question-list">
+      @for (item of reportData.questionResults; track item.questionId; let i = $index) {
+        <div class="oes-card oes-result-question" [class.oes-result-question--correct]="item.isCorrect" [class.oes-result-question--incorrect]="!item.isCorrect && item.selectedOptionIds.length > 0">
+          <div class="oes-result-question__header">
+            <span class="oes-result-question__index">Q{{ i + 1 }}</span>
+            <p class="oes-result-question__text">{{ item.questionText }}</p>
+            <mat-icon class="oes-result-question__status-icon">
+              {{ item.isCorrect ? 'check_circle' : item.selectedOptionIds.length > 0 ? 'cancel' : 'remove_circle_outline' }}
+            </mat-icon>
+          </div>
+
+          <div class="oes-result-question__options">
+            @for (option of item.options; track option.id) {
+              <div
+                class="oes-result-question__option"
+                [class.oes-result-question__option--correct]="item.correctOptionIds.includes(option.id)"
+                [class.oes-result-question__option--wrong-pick]="item.selectedOptionIds.includes(option.id) && !item.correctOptionIds.includes(option.id)"
+              >
+                <mat-icon>
+                  {{ item.correctOptionIds.includes(option.id) ? 'check_circle' : item.selectedOptionIds.includes(option.id) ? 'cancel' : 'radio_button_unchecked' }}
+                </mat-icon>
+                {{ option.text }}
+              </div>
+            }
+          </div>
+
+          <p class="oes-result-question__marks">
+            Marks awarded: <strong>{{ item.marksAwarded }}</strong>
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+}

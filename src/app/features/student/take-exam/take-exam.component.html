@@ -1,0 +1,93 @@
+@if (exam(); as examData) {
+  <div class="oes-take-exam">
+    <header class="oes-take-exam__header">
+      <div>
+        <h2 class="oes-take-exam__title">{{ examData.title }}</h2>
+        <p class="oes-take-exam__progress">{{ answeredCount() }} / {{ questionVMs().length }} answered</p>
+      </div>
+      <oes-countdown-timer
+        [initialSeconds]="attempt()?.remainingSeconds ?? 0"
+        (tick)="onTimerTick($event)"
+        (expired)="onTimerExpired()"
+      ></oes-countdown-timer>
+      <button mat-flat-button color="primary" (click)="submitExam()">
+        <mat-icon>send</mat-icon>
+        Submit Exam
+      </button>
+    </header>
+
+    <div class="oes-take-exam__body">
+      @if (currentQuestion(); as vm) {
+        <div class="oes-card oes-take-exam__question-panel">
+          <div class="oes-take-exam__question-meta">
+            <span class="oes-take-exam__question-number">Question {{ vm.index + 1 }} of {{ questionVMs().length }}</span>
+            <span class="oes-take-exam__question-marks">+{{ vm.question.marks }} marks @if (vm.question.negativeMarks > 0) { · -{{ vm.question.negativeMarks }} for wrong answer }</span>
+          </div>
+
+          <p class="oes-take-exam__question-text">{{ vm.question.text }}</p>
+
+          <div class="oes-take-exam__options">
+            @for (option of vm.question.options; track option.id) {
+              <button
+                type="button"
+                class="oes-take-exam__option"
+                [class.oes-take-exam__option--selected]="vm.answer.selectedOptionIds.includes(option.id)"
+                (click)="selectOption(vm.question.id, option.id, vm.question.type)"
+              >
+                <span class="oes-take-exam__option-indicator">
+                  <mat-icon>{{ vm.answer.selectedOptionIds.includes(option.id) ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+                </span>
+                {{ option.text }}
+              </button>
+            }
+          </div>
+
+          <div class="oes-take-exam__question-actions">
+            <button mat-button (click)="toggleMarkForReview(vm.question.id)">
+              <mat-icon>{{ vm.answer.markedForReview ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+              {{ vm.answer.markedForReview ? 'Unmark Review' : 'Mark for Review' }}
+            </button>
+            <button mat-button (click)="clearResponse(vm.question.id)" [disabled]="vm.answer.selectedOptionIds.length === 0">
+              <mat-icon>backspace</mat-icon>
+              Clear Response
+            </button>
+          </div>
+
+          <div class="oes-take-exam__nav-buttons">
+            <button mat-stroked-button (click)="goPrevious()" [disabled]="currentIndex() === 0">
+              <mat-icon>arrow_back</mat-icon>
+              Previous
+            </button>
+            <button mat-stroked-button (click)="goNext()" [disabled]="currentIndex() === questionVMs().length - 1">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+      }
+
+      <aside class="oes-card oes-take-exam__palette">
+        <h3 class="oes-take-exam__palette-title">Question Palette</h3>
+        <div class="oes-take-exam__palette-grid">
+          @for (vm of questionVMs(); track vm.question.id) {
+            <button
+              type="button"
+              class="oes-take-exam__palette-item oes-take-exam__palette-item--{{ questionStatusClass(vm) }}"
+              [class.oes-take-exam__palette-item--current]="currentIndex() === vm.index"
+              (click)="goToQuestion(vm.index)"
+            >
+              {{ vm.index + 1 }}
+            </button>
+          }
+        </div>
+
+        <div class="oes-take-exam__legend">
+          <span><i class="oes-take-exam__dot oes-take-exam__dot--answered"></i>Answered</span>
+          <span><i class="oes-take-exam__dot oes-take-exam__dot--marked"></i>Marked for review</span>
+          <span><i class="oes-take-exam__dot oes-take-exam__dot--visited"></i>Visited</span>
+          <span><i class="oes-take-exam__dot oes-take-exam__dot--unvisited"></i>Not visited</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+}

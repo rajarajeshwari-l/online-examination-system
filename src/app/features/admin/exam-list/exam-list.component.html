@@ -1,0 +1,96 @@
+<div class="oes-page-container">
+  <oes-page-header title="Exams" subtitle="Create, edit, and manage every exam in one place.">
+    <div actions>
+      <a mat-flat-button color="primary" routerLink="/admin/exams/new">
+        <mat-icon>add</mat-icon>
+        Create Exam
+      </a>
+    </div>
+  </oes-page-header>
+
+  <div class="oes-exam-list__toolbar">
+    <oes-search-input placeholder="Search exams by title or subject..." (searchChange)="onSearch($event)"></oes-search-input>
+    <mat-chip-listbox class="oes-exam-list__filters" aria-label="Filter by status">
+      @for (filter of statusFilters; track filter.value) {
+        <mat-chip-option
+          [selected]="statusFilter() === filter.value"
+          (click)="setStatusFilter(filter.value)"
+        >
+          {{ filter.label }}
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
+
+  @if (isLoading()) {
+    <div class="oes-exam-list__grid">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <oes-skeleton variant="card"></oes-skeleton>
+      }
+    </div>
+  } @else if (pagedExams().length === 0) {
+    <oes-empty-state
+      icon="assignment"
+      title="No exams found"
+      description="Try adjusting your search or filters, or create a brand new exam."
+      actionLabel="Create Exam"
+    ></oes-empty-state>
+  } @else {
+    <div class="oes-exam-list__grid">
+      @for (exam of pagedExams(); track exam.id) {
+        <div class="oes-card oes-card--hoverable oes-exam-card oes-slide-up">
+          <div class="oes-exam-card__top">
+            <div class="oes-exam-card__icon" [style.background]="exam.thumbnailColor + '1f'" [style.color]="exam.thumbnailColor">
+              <mat-icon>{{ exam.thumbnailIcon }}</mat-icon>
+            </div>
+            <button mat-icon-button [matMenuTriggerFor]="examMenu" aria-label="Exam options">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #examMenu="matMenu">
+              <button mat-menu-item (click)="editExam(exam.id)">
+                <mat-icon>edit</mat-icon><span>Edit Exam</span>
+              </button>
+              <button mat-menu-item (click)="manageQuestions(exam.id)">
+                <mat-icon>quiz</mat-icon><span>Manage Questions</span>
+              </button>
+              <button mat-menu-item (click)="viewResults(exam.id)">
+                <mat-icon>leaderboard</mat-icon><span>View Results</span>
+              </button>
+              <button mat-menu-item (click)="duplicateExam(exam.id)">
+                <mat-icon>content_copy</mat-icon><span>Duplicate</span>
+              </button>
+              <button mat-menu-item (click)="deleteExam(exam)">
+                <mat-icon>delete_outline</mat-icon><span>Delete</span>
+              </button>
+            </mat-menu>
+          </div>
+
+          <h3 class="oes-exam-card__title">{{ exam.title }}</h3>
+          <p class="oes-exam-card__subject">{{ exam.subject }}</p>
+          <p class="oes-exam-card__description">{{ exam.description }}</p>
+
+          <div class="oes-exam-card__meta">
+            <span><mat-icon>schedule</mat-icon>{{ exam.durationMinutes }} min</span>
+            <span><mat-icon>quiz</mat-icon>{{ exam.questionCount }} questions</span>
+            <span><mat-icon>groups</mat-icon>{{ exam.attemptCount }} attempts</span>
+          </div>
+
+          <div class="oes-exam-card__footer">
+            <oes-status-badge [label]="exam.status | titlecase" [tone]="badgeTone(exam.status)"></oes-status-badge>
+            @if (exam.attemptCount > 0) {
+              <span class="oes-exam-card__average">Avg. {{ exam.averageScore }}%</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <oes-paginator
+      [length]="totalCount()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[6, 12, 24]"
+      (pageChange)="onPageChange($event)"
+    ></oes-paginator>
+  }
+</div>

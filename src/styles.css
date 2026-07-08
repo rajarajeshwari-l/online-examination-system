@@ -1,0 +1,219 @@
+/* ==========================================================================
+   ExamPro — Global Design System
+   ========================================================================== */
+
+:root {
+  /* Brand palette */
+  --oes-primary-50: #eef2ff;
+  --oes-primary-100: #e0e7ff;
+  --oes-primary-200: #c7d2fe;
+  --oes-primary-300: #a5b4fc;
+  --oes-primary-400: #818cf8;
+  --oes-primary-500: #6366f1;
+  --oes-primary-600: #4f46e5;
+  --oes-primary-700: #4338ca;
+  --oes-primary-800: #3730a3;
+  --oes-primary-900: #312e81;
+
+  --oes-accent-500: #06b6d4;
+  --oes-accent-600: #0891b2;
+
+  --oes-success-500: #10b981;
+  --oes-success-600: #059669;
+  --oes-warning-500: #f59e0b;
+  --oes-warning-600: #d97706;
+  --oes-danger-500: #ef4444;
+  --oes-danger-600: #dc2626;
+
+  --oes-gradient-brand: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+  --oes-gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --oes-gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --oes-gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+
+  /* Typography */
+  --oes-font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  --oes-font-body: 'Inter', 'Plus Jakarta Sans', sans-serif;
+
+  /* Radii & elevation */
+  --oes-radius-sm: 8px;
+  --oes-radius-md: 12px;
+  --oes-radius-lg: 16px;
+  --oes-radius-xl: 24px;
+  --oes-radius-full: 999px;
+
+  --oes-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --oes-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --oes-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+  --oes-shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.16);
+  --oes-shadow-glow: 0 8px 24px rgba(99, 102, 241, 0.25);
+
+  --oes-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --oes-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --oes-transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Light theme surface tokens (default) */
+  --oes-bg-base: #f4f5fb;
+  --oes-bg-elevated: #ffffff;
+  --oes-bg-sunken: #eceef8;
+  --oes-surface-card: #ffffff;
+  --oes-surface-glass: rgba(255, 255, 255, 0.65);
+  --oes-border-subtle: rgba(15, 23, 42, 0.08);
+  --oes-border-strong: rgba(15, 23, 42, 0.14);
+  --oes-text-primary: #0f172a;
+  --oes-text-secondary: #475569;
+  --oes-text-tertiary: #94a3b8;
+  --oes-text-inverse: #f8fafc;
+  --oes-backdrop-blur: blur(20px);
+}
+
+html.dark-theme {
+  --oes-bg-base: #0b0e1a;
+  --oes-bg-elevated: #12162a;
+  --oes-bg-sunken: #080a13;
+  --oes-surface-card: #151a30;
+  --oes-surface-glass: rgba(21, 26, 48, 0.65);
+  --oes-border-subtle: rgba(255, 255, 255, 0.08);
+  --oes-border-strong: rgba(255, 255, 255, 0.14);
+  --oes-text-primary: #f1f5f9;
+  --oes-text-secondary: #b6c0d6;
+  --oes-text-tertiary: #6b7690;
+  --oes-text-inverse: #0f172a;
+  --oes-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --oes-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --oes-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --oes-shadow-xl: 0 28px 56px rgba(0, 0, 0, 0.55);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--oes-font-body);
+  background: var(--oes-bg-base);
+  color: var(--oes-text-primary);
+  transition: background var(--oes-transition-slow), color var(--oes-transition-slow);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--oes-font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--oes-text-primary);
+  margin: 0;
+}
+
+p { margin: 0; color: var(--oes-text-secondary); }
+
+a { color: var(--oes-primary-600); text-decoration: none; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--oes-border-strong);
+  border-radius: var(--oes-radius-full);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--oes-primary-400); background-clip: padding-box; }
+
+/* ==========================================================================
+   Reusable utility classes
+   ========================================================================== */
+
+.oes-glass-panel {
+  background: var(--oes-surface-glass);
+  backdrop-filter: var(--oes-backdrop-blur);
+  -webkit-backdrop-filter: var(--oes-backdrop-blur);
+  border: 1px solid var(--oes-border-subtle);
+  border-radius: var(--oes-radius-lg);
+}
+
+.oes-card {
+  background: var(--oes-surface-card);
+  border: 1px solid var(--oes-border-subtle);
+  border-radius: var(--oes-radius-lg);
+  box-shadow: var(--oes-shadow-sm);
+  transition: transform var(--oes-transition-base), box-shadow var(--oes-transition-base), border-color var(--oes-transition-base);
+}
+
+.oes-card--hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--oes-shadow-lg);
+  border-color: var(--oes-primary-200);
+}
+
+.oes-gradient-text {
+  background: var(--oes-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.oes-page-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px clamp(16px, 4vw, 40px) 64px;
+}
+
+.oes-fade-in {
+  animation: oesFadeIn var(--oes-transition-slow) ease both;
+}
+
+.oes-slide-up {
+  animation: oesSlideUp var(--oes-transition-slow) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes oesFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes oesSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes oesPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.oes-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--oes-bg-sunken) 25%,
+    var(--oes-border-subtle) 37%,
+    var(--oes-bg-sunken) 63%
+  );
+  background-size: 400% 100%;
+  animation: oesShimmer 1.4s ease infinite;
+  border-radius: var(--oes-radius-sm);
+}
+
+@keyframes oesShimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+.oes-focus-ring:focus-visible {
+  outline: 2px solid var(--oes-primary-500);
+  outline-offset: 2px;
+}
+
+/* Angular Material density & overrides */
+.mat-mdc-snack-bar-container { --mdc-snackbar-container-shape: 12px; }
+
+.mdc-button { border-radius: var(--oes-radius-md) !important; text-transform: none !important; font-weight: 600 !important; }
+
+.mat-mdc-card { border-radius: var(--oes-radius-lg) !important; }
+
+@media (max-width: 599px) {
+  .oes-page-container { padding: 16px 16px 48px; }
+}

@@ -1,0 +1,108 @@
+<div class="oes-page-container">
+  <oes-page-header title="Analytics" subtitle="Deep insights into exam performance across your institution."></oes-page-header>
+
+  <div class="oes-analytics__stats-grid">
+    <oes-stat-card
+      icon="fact_check"
+      [value]="stats().totalAttempts"
+      label="Total Attempts"
+      iconColor="#4f46e5"
+      iconBackground="rgba(99, 102, 241, 0.12)"
+    ></oes-stat-card>
+    <oes-stat-card
+      icon="grade"
+      [value]="stats().averageScorePercentage + '%'"
+      label="Average Score"
+      iconColor="#059669"
+      iconBackground="rgba(16, 185, 129, 0.12)"
+    ></oes-stat-card>
+    <oes-stat-card
+      icon="verified"
+      [value]="stats().passRatePercentage + '%'"
+      label="Pass Rate"
+      iconColor="#0891b2"
+      iconBackground="rgba(6, 182, 212, 0.12)"
+    ></oes-stat-card>
+    <oes-stat-card
+      icon="library_books"
+      [value]="stats().totalQuestions"
+      label="Total Questions"
+      iconColor="#d97706"
+      iconBackground="rgba(245, 158, 11, 0.14)"
+    ></oes-stat-card>
+  </div>
+
+  <div class="oes-analytics__grid">
+    <div class="oes-card oes-analytics__panel">
+      <div class="oes-analytics__panel-header">
+        <h3>Score Distribution</h3>
+        <p>How students are performing across all exams</p>
+      </div>
+      @if (stats().totalAttempts === 0) {
+        <oes-empty-state icon="query_stats" title="No data yet" description="Distribution will appear after attempts are submitted."></oes-empty-state>
+      } @else {
+        <oes-bar-chart [data]="scoreDistribution()"></oes-bar-chart>
+      }
+    </div>
+
+    <div class="oes-card oes-analytics__panel">
+      <div class="oes-analytics__panel-header">
+        <h3>Performance Tiers</h3>
+        <p>Student proficiency breakdown</p>
+      </div>
+      @if (stats().totalAttempts === 0) {
+        <oes-empty-state icon="donut_large" title="No data yet" description="Tiers will populate once attempts exist."></oes-empty-state>
+      } @else {
+        <oes-donut-chart [data]="difficultySegments()" centerLabel="Students"></oes-donut-chart>
+      }
+    </div>
+  </div>
+
+  <div class="oes-analytics__bottom-grid">
+    <div class="oes-card oes-analytics__panel">
+      <div class="oes-analytics__panel-header">
+        <h3>Exam-wise Average</h3>
+        <p>Average score per exam</p>
+      </div>
+      @if (examPerformance().length === 0) {
+        <oes-empty-state icon="assignment" title="No exams yet" description="Create exams to see comparative performance."></oes-empty-state>
+      } @else {
+        <div class="oes-analytics__exam-list">
+          @for (exam of examPerformance(); track exam.examTitle) {
+            <div class="oes-analytics__exam-row">
+              <span class="oes-analytics__exam-title">{{ exam.examTitle }}</span>
+              <div class="oes-analytics__exam-bar-track">
+                <div class="oes-analytics__exam-bar-fill" [style.width.%]="exam.averagePercentage"></div>
+              </div>
+              <span class="oes-analytics__exam-value">{{ exam.averagePercentage }}%</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="oes-card oes-analytics__panel">
+      <div class="oes-analytics__panel-header">
+        <h3>Top Performers</h3>
+        <p>Students with the highest average scores</p>
+      </div>
+      @if (topPerformers().length === 0) {
+        <oes-empty-state icon="emoji_events" title="No rankings yet" description="Top performers will appear once students complete exams."></oes-empty-state>
+      } @else {
+        <ul class="oes-analytics__leaderboard">
+          @for (performer of topPerformers(); track performer.studentName; let i = $index) {
+            <li class="oes-analytics__leaderboard-item">
+              <span class="oes-analytics__leaderboard-rank">{{ i + 1 }}</span>
+              <oes-avatar [name]="performer.studentName" [color]="performer.avatarColor" [size]="36"></oes-avatar>
+              <div class="oes-analytics__leaderboard-text">
+                <span class="oes-analytics__leaderboard-name">{{ performer.studentName }}</span>
+                <span class="oes-analytics__leaderboard-meta">{{ performer.attemptCount }} attempts</span>
+              </div>
+              <span class="oes-analytics__leaderboard-score">{{ performer.averagePercentage }}%</span>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+</div>

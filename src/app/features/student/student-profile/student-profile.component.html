@@ -1,0 +1,49 @@
+<div class="oes-page-container oes-page-container--narrow">
+  <oes-page-header title="My Profile" subtitle="Manage your student account details."></oes-page-header>
+
+  <div class="oes-student-profile__header oes-card">
+    <oes-avatar [name]="form.controls.fullName.value" [color]="'#6366f1'" [size]="72"></oes-avatar>
+    <div>
+      <h2 class="oes-student-profile__name">{{ form.controls.fullName.value }}</h2>
+      <p class="oes-student-profile__role">{{ form.controls.batch.value }}</p>
+    </div>
+  </div>
+
+  <div class="oes-student-profile__stats">
+    <oes-stat-card icon="fact_check" [value]="myAttempts().length" label="Exams Attempted" iconColor="#4f46e5" iconBackground="rgba(99,102,241,0.12)"></oes-stat-card>
+    <oes-stat-card icon="grade" [value]="averageScore() + '%'" label="Average Score" iconColor="#059669" iconBackground="rgba(16,185,129,0.12)"></oes-stat-card>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="saveProfile()" class="oes-card oes-student-profile__form" novalidate>
+    <h3 class="oes-student-profile__form-title">Account Details</h3>
+
+    <mat-form-field appearance="outline" class="oes-student-profile__field">
+      <mat-label>Full name</mat-label>
+      <input matInput formControlName="fullName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="oes-student-profile__field">
+      <mat-label>Email address</mat-label>
+      <input matInput type="email" formControlName="email" />
+    </mat-form-field>
+
+    <div class="oes-student-profile__row">
+      <mat-form-field appearance="outline" class="oes-student-profile__field">
+        <mat-label>Phone number</mat-label>
+        <input matInput formControlName="phone" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="oes-student-profile__field">
+        <mat-label>Batch</mat-label>
+        <input matInput formControlName="batch" />
+      </mat-form-field>
+    </div>
+
+    <div class="oes-student-profile__actions">
+      <button mat-flat-button color="primary" type="submit">
+        <mat-icon>save</mat-icon>
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>

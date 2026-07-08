@@ -1,0 +1,40 @@
+<div class="oes-auth-shell">
+  <button
+    mat-icon-button
+    class="oes-auth-shell__theme-toggle"
+    (click)="themeService.toggle()"
+    [attr.aria-label]="themeService.mode() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+  >
+    <mat-icon>{{ themeService.mode() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+
+  <section class="oes-auth-shell__branding">
+    <div class="oes-auth-shell__branding-inner oes-fade-in">
+      <div class="oes-auth-shell__logo">
+        <mat-icon>school</mat-icon>
+        <span>ExamPro</span>
+      </div>
+      <h1 class="oes-auth-shell__headline">Exams, reimagined for the modern classroom.</h1>
+      <p class="oes-auth-shell__subheadline">
+        Create, deliver, and analyze assessments in one beautifully simple platform —
+        built for administrators and students alike.
+      </p>
+      <ul class="oes-auth-shell__highlights">
+        @for (item of highlights; track item.text) {
+          <li>
+            <span class="oes-auth-shell__highlight-icon"><mat-icon>{{ item.icon }}</mat-icon></span>
+            {{ item.text }}
+          </li>
+        }
+      </ul>
+    </div>
+    <div class="oes-auth-shell__glow oes-auth-shell__glow--one"></div>
+    <div class="oes-auth-shell__glow oes-auth-shell__glow--two"></div>
+  </section>
+
+  <section class="oes-auth-shell__form-panel">
+    <div class="oes-auth-shell__form-inner oes-slide-up">
+      <router-outlet></router-outlet>
+    </div>
+  </section>
+</div>

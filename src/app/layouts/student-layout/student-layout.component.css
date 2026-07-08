@@ -1,0 +1,134 @@
+.oes-shell {
+  height: 100vh;
+  background: var(--oes-bg-base);
+}
+
+.oes-shell__sidenav {
+  width: 264px;
+  background: var(--oes-bg-elevated);
+  border-right: 1px solid var(--oes-border-subtle);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+}
+
+.oes-shell__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--oes-font-display);
+  font-weight: 800;
+  font-size: 19px;
+  color: var(--oes-text-primary);
+  padding: 8px 10px 24px;
+}
+
+.oes-shell__brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--oes-radius-md);
+  background: var(--oes-gradient-brand);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.oes-shell__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.oes-shell__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px;
+  border-radius: var(--oes-radius-md);
+  color: var(--oes-text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  transition: background var(--oes-transition-fast), color var(--oes-transition-fast);
+}
+
+.oes-shell__nav-link mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.oes-shell__nav-link:hover {
+  background: var(--oes-bg-sunken);
+  color: var(--oes-text-primary);
+}
+
+.oes-shell__nav-link--active {
+  background: var(--oes-gradient-brand);
+  color: #fff !important;
+  box-shadow: var(--oes-shadow-glow);
+}
+
+.oes-shell__sidenav-footer {
+  padding: 14px 10px 4px;
+}
+
+.oes-shell__student-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--oes-radius-md);
+  background: var(--oes-bg-sunken);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--oes-text-secondary);
+}
+
+.oes-shell__student-tag mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: var(--oes-warning-500);
+}
+
+.oes-shell__content { display: flex; flex-direction: column; }
+
+.oes-shell__toolbar {
+  background: var(--oes-surface-glass);
+  backdrop-filter: var(--oes-backdrop-blur);
+  border-bottom: 1px solid var(--oes-border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 6px;
+}
+
+.oes-shell__toolbar-spacer { flex: 1; }
+
+.oes-shell__user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px !important;
+  min-width: 0;
+}
+
+.oes-shell__user-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oes-shell__main {
+  flex: 1;
+  overflow-y: auto;
+}
+
+@media (max-width: 599px) {
+  .oes-shell__user-name { display: none; }
+}

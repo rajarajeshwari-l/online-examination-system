@@ -1,0 +1,68 @@
+<div class="oes-page-container">
+  <oes-page-header title="Students" subtitle="View student performance and manage account access."></oes-page-header>
+
+  <div class="oes-student-mgmt__toolbar">
+    <oes-search-input placeholder="Search by name, email, or roll number..." (searchChange)="onSearch($event)"></oes-search-input>
+  </div>
+
+  @if (pagedRows().length === 0) {
+    <oes-empty-state
+      icon="groups"
+      title="No students found"
+      description="Try a different search term, or wait for students to register."
+    ></oes-empty-state>
+  } @else {
+    <div class="oes-student-mgmt__grid">
+      @for (row of pagedRows(); track row.student.id) {
+        <div class="oes-card oes-card--hoverable oes-student-card oes-slide-up">
+          <div class="oes-student-card__top">
+            <oes-avatar [name]="row.student.fullName" [color]="row.student.avatarColor" [size]="48"></oes-avatar>
+            <button mat-icon-button [matMenuTriggerFor]="studentMenu" aria-label="Student options">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #studentMenu="matMenu">
+              <button mat-menu-item (click)="toggleStatus(row)">
+                <mat-icon>{{ row.student.status === 'active' ? 'block' : 'check_circle' }}</mat-icon>
+                <span>{{ row.student.status === 'active' ? 'Suspend Account' : 'Reactivate Account' }}</span>
+              </button>
+            </mat-menu>
+          </div>
+
+          <h3 class="oes-student-card__name">{{ row.student.fullName }}</h3>
+          <p class="oes-student-card__email">{{ row.student.email }}</p>
+
+          <div class="oes-student-card__meta">
+            <span><mat-icon>badge</mat-icon>{{ row.student.rollNumber }}</span>
+            <span><mat-icon>groups</mat-icon>{{ row.student.batch }}</span>
+          </div>
+
+          <div class="oes-student-card__stats">
+            <div class="oes-student-card__stat">
+              <span class="oes-student-card__stat-value">{{ row.attemptCount }}</span>
+              <span class="oes-student-card__stat-label">Attempts</span>
+            </div>
+            <div class="oes-student-card__stat">
+              <span class="oes-student-card__stat-value">{{ row.averageScore }}%</span>
+              <span class="oes-student-card__stat-label">Avg. Score</span>
+            </div>
+          </div>
+
+          <div class="oes-student-card__footer">
+            <oes-status-badge
+              [label]="row.student.status === 'active' ? 'Active' : 'Suspended'"
+              [tone]="row.student.status === 'active' ? 'success' : 'danger'"
+            ></oes-status-badge>
+          </div>
+        </div>
+      }
+    </div>
+
+    <oes-paginator
+      [length]="totalCount()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[8, 16, 32]"
+      (pageChange)="onPageChange($event)"
+    ></oes-paginator>
+  }
+</div>

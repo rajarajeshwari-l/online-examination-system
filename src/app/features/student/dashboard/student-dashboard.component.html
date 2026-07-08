@@ -1,0 +1,102 @@
+<div class="oes-page-container">
+  <oes-page-header title="Welcome back, {{ firstName() }} 👋" subtitle="Here's your exam activity at a glance.">
+    <div actions>
+      <a mat-flat-button color="primary" routerLink="/student/exams">
+        <mat-icon>assignment_turned_in</mat-icon>
+        Browse Exams
+      </a>
+    </div>
+  </oes-page-header>
+
+  @if (isLoading()) {
+    <div class="oes-student-dash__stats-grid">
+      @for (i of [1,2,3]; track i) {
+        <oes-skeleton variant="card"></oes-skeleton>
+      }
+    </div>
+  } @else {
+    <div class="oes-student-dash__stats-grid">
+      <oes-stat-card
+        icon="assignment_turned_in"
+        [value]="availableExamsCount()"
+        label="Available Exams"
+        iconColor="#4f46e5"
+        iconBackground="rgba(99, 102, 241, 0.12)"
+      ></oes-stat-card>
+      <oes-stat-card
+        icon="grade"
+        [value]="averageScore() + '%'"
+        label="Your Average Score"
+        iconColor="#059669"
+        iconBackground="rgba(16, 185, 129, 0.12)"
+      ></oes-stat-card>
+      <oes-stat-card
+        icon="emoji_events"
+        [value]="passedCount() + ' / ' + myAttempts().length"
+        label="Exams Passed"
+        iconColor="#d97706"
+        iconBackground="rgba(245, 158, 11, 0.14)"
+      ></oes-stat-card>
+    </div>
+  }
+
+  <div class="oes-student-dash__grid">
+    <div class="oes-card oes-student-dash__panel">
+      <div class="oes-student-dash__panel-header">
+        <h3>Recommended for you</h3>
+        <p>Exams you haven't attempted yet</p>
+      </div>
+      @if (recommendedExams().length === 0) {
+        <oes-empty-state
+          icon="check_circle"
+          title="You're all caught up!"
+          description="You've attempted every available exam. Check back later for new ones."
+        ></oes-empty-state>
+      } @else {
+        <div class="oes-student-dash__exam-list">
+          @for (exam of recommendedExams(); track exam.id) {
+            <div class="oes-student-dash__exam-row">
+              <div class="oes-student-dash__exam-icon" [style.background]="exam.thumbnailColor + '1f'" [style.color]="exam.thumbnailColor">
+                <mat-icon>{{ exam.thumbnailIcon }}</mat-icon>
+              </div>
+              <div class="oes-student-dash__exam-info">
+                <span class="oes-student-dash__exam-title">{{ exam.title }}</span>
+                <span class="oes-student-dash__exam-meta">{{ exam.durationMinutes }} min · {{ exam.totalMarks }} marks</span>
+              </div>
+              <a mat-stroked-button [routerLink]="['/student/exams', exam.id, 'instructions']">Start</a>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="oes-card oes-student-dash__panel">
+      <div class="oes-student-dash__panel-header">
+        <h3>Recent Results</h3>
+        <p>Your latest exam submissions</p>
+      </div>
+      @if (recentResults().length === 0) {
+        <oes-empty-state
+          icon="history_edu"
+          title="No attempts yet"
+          description="Take your first exam to see your results appear here."
+        ></oes-empty-state>
+      } @else {
+        <ul class="oes-student-dash__result-list">
+          @for (item of recentResults(); track item.attempt.id) {
+            <li class="oes-student-dash__result-item">
+              <div class="oes-student-dash__result-text">
+                <span class="oes-student-dash__result-title">{{ item.examTitle }}</span>
+                <span class="oes-student-dash__result-meta">{{ item.attempt.score }} / {{ item.attempt.totalMarks }} marks</span>
+              </div>
+              <oes-status-badge [label]="item.attempt.percentage + '%'" [tone]="item.attempt.passed ? 'success' : 'danger'"></oes-status-badge>
+              <a mat-icon-button [routerLink]="['/student/attempts', item.attempt.id, 'result']" aria-label="View result">
+                <mat-icon>arrow_forward</mat-icon>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="oes-page-container oes-page-container--narrow">
+  <oes-page-header [title]="exam()?.title ?? 'Exam'" subtitle="Please read the instructions carefully before you begin.">
+    <div actions>
+      <a mat-stroked-button routerLink="/student/exams">
+        <mat-icon>arrow_back</mat-icon>
+        Back
+      </a>
+    </div>
+  </oes-page-header>
+
+  @if (exam(); as examData) {
+    <div class="oes-card oes-instructions">
+      <div class="oes-instructions__summary">
+        <div class="oes-instructions__summary-item">
+          <mat-icon>schedule</mat-icon>
+          <div>
+            <span class="oes-instructions__summary-value">{{ examData.durationMinutes }} min</span>
+            <span class="oes-instructions__summary-label">Duration</span>
+          </div>
+        </div>
+        <div class="oes-instructions__summary-item">
+          <mat-icon>quiz</mat-icon>
+          <div>
+            <span class="oes-instructions__summary-value">{{ examData.questionsToShow || questionCount() }}</span>
+            <span class="oes-instructions__summary-label">Questions</span>
+          </div>
+        </div>
+        <div class="oes-instructions__summary-item">
+          <mat-icon>military_tech</mat-icon>
+          <div>
+            <span class="oes-instructions__summary-value">{{ examData.totalMarks }}</span>
+            <span class="oes-instructions__summary-label">Total Marks</span>
+          </div>
+        </div>
+        <div class="oes-instructions__summary-item">
+          <mat-icon>verified</mat-icon>
+          <div>
+            <span class="oes-instructions__summary-value">{{ examData.passingMarks }}</span>
+            <span class="oes-instructions__summary-label">Passing Marks</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="oes-instructions__rules-title">Exam Rules</h3>
+      <ul class="oes-instructions__rules">
+        @for (rule of rules; track rule) {
+          <li><mat-icon>check_circle</mat-icon>{{ rule }}</li>
+        }
+      </ul>
+
+      <label class="oes-instructions__agree">
+        <mat-checkbox [checked]="hasAgreed()" (change)="hasAgreed.set($event.checked)" color="primary"></mat-checkbox>
+        I have read and understood the instructions above.
+      </label>
+
+      <button
+        mat-flat-button
+        color="primary"
+        class="oes-instructions__start"
+        [disabled]="!hasAgreed() || isStarting()"
+        (click)="startExam()"
+      >
+        <mat-icon>play_arrow</mat-icon>
+        {{ isStarting() ? 'Starting...' : 'Start Exam Now' }}
+      </button>
+    </div>
+  }
+</div>

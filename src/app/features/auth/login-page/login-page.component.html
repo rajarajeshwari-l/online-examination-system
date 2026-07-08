@@ -1,0 +1,60 @@
+<div class="oes-auth-form">
+  <h2 class="oes-auth-form__title">Welcome back</h2>
+  <p class="oes-auth-form__subtitle">Sign in to continue to your ExamPro dashboard.</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="oes-auth-form__form" novalidate>
+    <mat-form-field appearance="outline" class="oes-auth-form__field">
+      <mat-label>Email address</mat-label>
+      <input matInput type="email" formControlName="email" placeholder="you@example.com" autocomplete="email" />
+      <mat-icon matPrefix>mail_outline</mat-icon>
+      @if (form.controls.email.hasError('required') && form.controls.email.touched) {
+        <mat-error>Email is required.</mat-error>
+      }
+      @if (form.controls.email.hasError('email') && form.controls.email.touched) {
+        <mat-error>Enter a valid email address.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="oes-auth-form__field">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="hidePassword() ? 'password' : 'text'"
+        formControlName="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+      />
+      <mat-icon matPrefix>lock_outline</mat-icon>
+      <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()" [attr.aria-label]="'Toggle password visibility'">
+        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (form.controls.password.hasError('required') && form.controls.password.touched) {
+        <mat-error>Password is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" type="submit" class="oes-auth-form__submit" [disabled]="isSubmitting()">
+      @if (isSubmitting()) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        <span>Sign In</span>
+      }
+    </button>
+  </form>
+
+  <div class="oes-auth-form__demo">
+    <p class="oes-auth-form__demo-label">Quick demo access</p>
+    <div class="oes-auth-form__demo-buttons">
+      @for (account of demoAccounts; track account.email) {
+        <button type="button" class="oes-auth-form__demo-chip" (click)="fillDemo(account.email, account.password)">
+          <mat-icon>{{ account.icon }}</mat-icon>
+          {{ account.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <p class="oes-auth-form__footer">
+    New student? <a routerLink="/auth/register">Create an account</a>
+  </p>
+</div>

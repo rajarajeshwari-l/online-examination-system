@@ -1,0 +1,76 @@
+<mat-sidenav-container class="oes-shell">
+  <mat-sidenav
+    #sidenav
+    class="oes-shell__sidenav"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="isMobile() ? sidenavOpen() : true"
+    (closedStart)="sidenavOpen.set(false)"
+  >
+    <div class="oes-shell__brand">
+      <div class="oes-shell__brand-icon"><mat-icon>school</mat-icon></div>
+      <span>ExamPro</span>
+    </div>
+
+    <nav class="oes-shell__nav">
+      @for (item of navItems; track item.route) {
+        <a
+          class="oes-shell__nav-link"
+          [routerLink]="item.route"
+          routerLinkActive="oes-shell__nav-link--active"
+          (click)="closeOnMobile()"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="oes-shell__sidenav-footer">
+      <div class="oes-shell__student-tag">
+        <mat-icon>emoji_events</mat-icon>
+        <span>Keep learning, keep growing</span>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="oes-shell__content">
+    <mat-toolbar class="oes-shell__toolbar">
+      @if (isMobile()) {
+        <button mat-icon-button (click)="toggleSidenav()" aria-label="Toggle navigation">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+
+      <span class="oes-shell__toolbar-spacer"></span>
+
+      <button
+        mat-icon-button
+        (click)="themeService.toggle()"
+        [matTooltip]="themeService.mode() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+      >
+        <mat-icon>{{ themeService.mode() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
+      <button mat-button class="oes-shell__user-trigger" [matMenuTriggerFor]="userMenu">
+        <oes-avatar [name]="authService.currentUserName()" [size]="34"></oes-avatar>
+        <span class="oes-shell__user-name">{{ authService.currentUserName() }}</span>
+        <mat-icon>expand_more</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <a mat-menu-item routerLink="/student/profile">
+          <mat-icon>person</mat-icon>
+          <span>My Profile</span>
+        </a>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Sign Out</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <main class="oes-shell__main">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

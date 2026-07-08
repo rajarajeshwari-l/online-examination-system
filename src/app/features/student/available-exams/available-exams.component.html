@@ -1,0 +1,64 @@
+<div class="oes-page-container">
+  <oes-page-header title="Available Exams" subtitle="Choose an exam below to view instructions and begin."></oes-page-header>
+
+  <div class="oes-avail-exams__toolbar">
+    <oes-search-input placeholder="Search exams by title or subject..." (searchChange)="onSearch($event)"></oes-search-input>
+  </div>
+
+  @if (isLoading()) {
+    <div class="oes-avail-exams__grid">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <oes-skeleton variant="card"></oes-skeleton>
+      }
+    </div>
+  } @else if (pagedExams().length === 0) {
+    <oes-empty-state
+      icon="assignment_turned_in"
+      title="No exams available"
+      description="There are no published exams matching your search right now."
+    ></oes-empty-state>
+  } @else {
+    <div class="oes-avail-exams__grid">
+      @for (item of pagedExams(); track item.exam.id) {
+        <div class="oes-card oes-card--hoverable oes-avail-exam-card oes-slide-up">
+          <div class="oes-avail-exam-card__icon" [style.background]="item.exam.thumbnailColor + '1f'" [style.color]="item.exam.thumbnailColor">
+            <mat-icon>{{ item.exam.thumbnailIcon }}</mat-icon>
+          </div>
+          <h3 class="oes-avail-exam-card__title">{{ item.exam.title }}</h3>
+          <p class="oes-avail-exam-card__subject">{{ item.exam.subject }}</p>
+          <p class="oes-avail-exam-card__description">{{ item.exam.description }}</p>
+
+          <div class="oes-avail-exam-card__meta">
+            <span><mat-icon>schedule</mat-icon>{{ item.exam.durationMinutes }} min</span>
+            <span><mat-icon>quiz</mat-icon>{{ item.exam.questionsToShow }} questions</span>
+            <span><mat-icon>military_tech</mat-icon>{{ item.exam.totalMarks }} marks</span>
+          </div>
+
+          @if (item.bestAttempt) {
+            <div class="oes-avail-exam-card__best">
+              Best score: <strong>{{ item.bestAttempt.percentage }}%</strong> · {{ item.attemptCount }} attempt(s)
+            </div>
+          }
+
+          <a
+            mat-flat-button
+            color="primary"
+            class="oes-avail-exam-card__action"
+            [routerLink]="item.inProgress ? ['/student/exams', item.exam.id, 'attempt', item.inProgress.id] : ['/student/exams', item.exam.id, 'instructions']"
+          >
+            <mat-icon>{{ item.inProgress ? 'play_arrow' : 'arrow_forward' }}</mat-icon>
+            {{ item.inProgress ? 'Resume Exam' : 'View Instructions' }}
+          </a>
+        </div>
+      }
+    </div>
+
+    <oes-paginator
+      [length]="totalCount()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[6, 12, 24]"
+      (pageChange)="onPageChange($event)"
+    ></oes-paginator>
+  }
+</div>

@@ -1,0 +1,49 @@
+.oes-exam-results__summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.oes-exam-results__summary-item {
+  padding: 20px;
+  text-align: center;
+}
+
+.oes-exam-results__summary-value {
+  display: block;
+  font-family: var(--oes-font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--oes-text-primary);
+}
+
+.oes-exam-results__summary-label {
+  font-size: 12.5px;
+  color: var(--oes-text-secondary);
+}
+
+.oes-exam-results__toolbar {
+  margin-bottom: 16px;
+}
+
+.oes-exam-results__table-card {
+  padding: 0;
+  overflow-x: auto;
+}
+
+.oes-exam-results__table {
+  width: 100%;
+  background: transparent;
+}
+
+.oes-exam-results__row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+@media (max-width: 700px) {
+  .oes-exam-results__summary { grid-template-columns: 1fr; }
+}

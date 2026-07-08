@@ -1,0 +1,92 @@
+<div class="oes-page-container">
+  <oes-page-header
+    [title]="(exam()?.title ?? 'Exam') + ' — Results'"
+    subtitle="Review every student submission and export reports."
+  >
+    <div actions>
+      <a mat-stroked-button routerLink="/admin/exams">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Exams
+      </a>
+      @if (rows().length > 0) {
+        <button mat-flat-button color="primary" (click)="exportAllResults()">
+          <mat-icon>picture_as_pdf</mat-icon>
+          Export All (PDF)
+        </button>
+      }
+    </div>
+  </oes-page-header>
+
+  <div class="oes-exam-results__summary">
+    <div class="oes-card oes-exam-results__summary-item">
+      <span class="oes-exam-results__summary-value">{{ rows().length }}</span>
+      <span class="oes-exam-results__summary-label">Total Submissions</span>
+    </div>
+    <div class="oes-card oes-exam-results__summary-item">
+      <span class="oes-exam-results__summary-value">{{ averagePercentage() }}%</span>
+      <span class="oes-exam-results__summary-label">Average Score</span>
+    </div>
+    <div class="oes-card oes-exam-results__summary-item">
+      <span class="oes-exam-results__summary-value">{{ passCount() }}</span>
+      <span class="oes-exam-results__summary-label">Students Passed</span>
+    </div>
+  </div>
+
+  <div class="oes-exam-results__toolbar">
+    <oes-search-input placeholder="Search by student name or roll number..." (searchChange)="searchTerm.set($event)"></oes-search-input>
+  </div>
+
+  @if (rows().length === 0) {
+    <oes-empty-state
+      icon="leaderboard"
+      title="No submissions yet"
+      description="Once students complete this exam, their results will appear here."
+    ></oes-empty-state>
+  } @else {
+    <div class="oes-card oes-exam-results__table-card">
+      <table mat-table [dataSource]="rows()" matSort (matSortChange)="onSortChange($event)" class="oes-exam-results__table">
+        <ng-container matColumnDef="studentName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Student</th>
+          <td mat-cell *matCellDef="let row">{{ row.studentName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="rollNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Roll Number</th>
+          <td mat-cell *matCellDef="let row">{{ row.rollNumber }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="score">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Score</th>
+          <td mat-cell *matCellDef="let row">{{ row.score }} / {{ row.totalMarks }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="percentage">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Percentage</th>
+          <td mat-cell *matCellDef="let row">{{ row.percentage }}%</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <oes-status-badge [label]="row.passed ? 'Passed' : 'Failed'" [tone]="row.passed ? 'success' : 'danger'"></oes-status-badge>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="submittedAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Submitted</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="oes-exam-results__row-actions">
+              {{ row.submittedAt | date: 'MMM d, y, h:mm a' }}
+              <button mat-icon-button (click)="exportSingleResult(row.attemptId)" aria-label="Export PDF">
+                <mat-icon>download</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  }
+</div>

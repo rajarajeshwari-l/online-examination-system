@@ -1,0 +1,162 @@
+<div class="oes-page-container">
+  <oes-page-header
+    [title]="(exam()?.title ?? 'Exam') + ' — Questions'"
+    subtitle="Add, edit, and organize the question bank for this exam."
+  >
+    <div actions>
+      <a mat-stroked-button routerLink="/admin/exams">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Exams
+      </a>
+      <button mat-flat-button color="primary" (click)="openCreateForm()">
+        <mat-icon>add</mat-icon>
+        Add Question
+      </button>
+    </div>
+  </oes-page-header>
+
+  <div class="oes-question-manager__toolbar">
+    <oes-search-input placeholder="Search questions..." (searchChange)="searchTerm.set($event)"></oes-search-input>
+    <span class="oes-question-manager__count">{{ questions().length }} question(s)</span>
+  </div>
+
+  @if (questions().length === 0) {
+    <oes-empty-state
+      icon="quiz"
+      title="No questions yet"
+      description="Start building your question bank for this exam."
+      actionLabel="Add Question"
+      (action)="openCreateForm()"
+    ></oes-empty-state>
+  } @else {
+    <div class="oes-question-manager__list">
+      @for (question of questions(); track question.id; let i = $index) {
+        <div class="oes-card oes-question-card oes-slide-up">
+          <div class="oes-question-card__header">
+            <span class="oes-question-card__index">Q{{ i + 1 }}</span>
+            <p class="oes-question-card__text">{{ question.text }}</p>
+            <div class="oes-question-card__actions">
+              <button mat-icon-button (click)="openEditForm(question)" aria-label="Edit question">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="deleteQuestion(question)" aria-label="Delete question">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="oes-question-card__options">
+            @for (option of question.options; track option.id) {
+              <div class="oes-question-card__option" [class.oes-question-card__option--correct]="question.correctOptionIds.includes(option.id)">
+                <mat-icon>{{ question.correctOptionIds.includes(option.id) ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                {{ option.text }}
+              </div>
+            }
+          </div>
+
+          <div class="oes-question-card__meta">
+            <span class="oes-question-card__chip" [style.color]="difficultyColor(question.difficulty)">
+              {{ question.difficulty }}
+            </span>
+            <span class="oes-question-card__chip">{{ question.topic }}</span>
+            <span class="oes-question-card__chip">+{{ question.marks }} marks</span>
+            @if (question.negativeMarks > 0) {
+              <span class="oes-question-card__chip">-{{ question.negativeMarks }} negative</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (isFormOpen()) {
+  <div class="oes-question-modal__backdrop oes-fade-in" (click)="closeForm()"></div>
+  <div class="oes-question-modal oes-slide-up" role="dialog" aria-modal="true">
+    <div class="oes-question-modal__header">
+      <h2>{{ editingQuestionId() ? 'Edit Question' : 'Add Question' }}</h2>
+      <button mat-icon-button (click)="closeForm()" aria-label="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="saveQuestion()" class="oes-question-modal__form" novalidate>
+      <mat-form-field appearance="outline" class="oes-question-modal__field">
+        <mat-label>Question text</mat-label>
+        <textarea matInput formControlName="text" rows="2" placeholder="What is..."></textarea>
+        @if (form.controls.text.hasError('required') && form.controls.text.touched) {
+          <mat-error>Question text is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="oes-question-modal__row">
+        <mat-form-field appearance="outline" class="oes-question-modal__field">
+          <mat-label>Topic</mat-label>
+          <input matInput formControlName="topic" placeholder="e.g. Closures" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="oes-question-modal__field">
+          <mat-label>Difficulty</mat-label>
+          <mat-select formControlName="difficulty">
+            <mat-option value="easy">Easy</mat-option>
+            <mat-option value="medium">Medium</mat-option>
+            <mat-option value="hard">Hard</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="oes-question-modal__row">
+        <mat-form-field appearance="outline" class="oes-question-modal__field">
+          <mat-label>Marks</mat-label>
+          <input matInput type="number" formControlName="marks" min="1" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="oes-question-modal__field">
+          <mat-label>Negative marks</mat-label>
+          <input matInput type="number" formControlName="negativeMarks" min="0" />
+        </mat-form-field>
+      </div>
+
+      <div class="oes-question-modal__options-header">
+        <span>Answer options</span>
+        @if (optionsArray.length < 6) {
+          <button mat-button type="button" (click)="addOption()">
+            <mat-icon>add</mat-icon> Add option
+          </button>
+        }
+      </div>
+
+      <div formArrayName="options" class="oes-question-modal__options">
+        @for (optionGroup of optionsArray.controls; track $index; let i = $index) {
+          <div [formGroupName]="i" class="oes-question-modal__option-row">
+            <button
+              type="button"
+              class="oes-question-modal__radio"
+              [class.oes-question-modal__radio--selected]="form.controls.correctOptionIndex.value === i"
+              (click)="form.controls.correctOptionIndex.setValue(i)"
+              [attr.aria-label]="'Mark option ' + (i + 1) + ' as correct'"
+            >
+              <mat-icon>{{ form.controls.correctOptionIndex.value === i ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+            </button>
+            <mat-form-field appearance="outline" class="oes-question-modal__option-field">
+              <input matInput formControlName="text" [placeholder]="'Option ' + (i + 1)" />
+            </mat-form-field>
+            @if (optionsArray.length > 2) {
+              <button mat-icon-button type="button" (click)="removeOption(i)" aria-label="Remove option">
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="oes-question-modal__actions">
+        <button mat-stroked-button type="button" (click)="closeForm()">Cancel</button>
+        <button mat-flat-button color="primary" type="submit">
+          <mat-icon>save</mat-icon>
+          {{ editingQuestionId() ? 'Save Changes' : 'Add Question' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}

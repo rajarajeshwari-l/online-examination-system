@@ -1,0 +1,49 @@
+.oes-auth-form__title {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.oes-auth-form__subtitle {
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.oes-auth-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.oes-auth-form__field {
+  width: 100%;
+}
+
+.oes-auth-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.oes-auth-form__submit {
+  height: 48px;
+  font-size: 15px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.oes-auth-form__footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13.5px;
+}
+
+.oes-auth-form__footer a {
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .oes-auth-form__row { grid-template-columns: 1fr; }
+}

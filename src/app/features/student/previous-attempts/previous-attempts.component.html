@@ -1,0 +1,45 @@
+<div class="oes-page-container">
+  <oes-page-header title="My Attempts" subtitle="Review your exam history and revisit detailed results."></oes-page-header>
+
+  <div class="oes-prev-attempts__toolbar">
+    <oes-search-input placeholder="Search by exam title or subject..." (searchChange)="onSearch($event)"></oes-search-input>
+  </div>
+
+  @if (pagedAttempts().length === 0) {
+    <oes-empty-state
+      icon="history_edu"
+      title="No attempts yet"
+      description="Once you complete an exam, it will show up here with your score and analysis."
+    ></oes-empty-state>
+  } @else {
+    <div class="oes-prev-attempts__list">
+      @for (item of pagedAttempts(); track item.attempt.id) {
+        <div class="oes-card oes-prev-attempt-card">
+          <div class="oes-prev-attempt-card__info">
+            <h3 class="oes-prev-attempt-card__title">{{ item.examTitle }}</h3>
+            <p class="oes-prev-attempt-card__meta">
+              {{ item.subject }} · Submitted {{ item.attempt.submittedAt | date: 'MMM d, y, h:mm a' }}
+            </p>
+          </div>
+          <div class="oes-prev-attempt-card__score">
+            <span class="oes-prev-attempt-card__score-value">{{ item.attempt.score }} / {{ item.attempt.totalMarks }}</span>
+            <span class="oes-prev-attempt-card__score-percent">{{ item.attempt.percentage }}%</span>
+          </div>
+          <oes-status-badge [label]="item.attempt.passed ? 'Passed' : 'Failed'" [tone]="item.attempt.passed ? 'success' : 'danger'"></oes-status-badge>
+          <a mat-stroked-button [routerLink]="['/student/attempts', item.attempt.id, 'result']">
+            View Analysis
+            <mat-icon>arrow_forward</mat-icon>
+          </a>
+        </div>
+      }
+    </div>
+
+    <oes-paginator
+      [length]="totalCount()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[8, 16, 32]"
+      (pageChange)="onPageChange($event)"
+    ></oes-paginator>
+  }
+</div>

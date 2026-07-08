@@ -1,0 +1,57 @@
+.oes-prev-attempts__toolbar {
+  margin-bottom: 20px;
+}
+
+.oes-prev-attempts__list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.oes-prev-attempt-card {
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.oes-prev-attempt-card__info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.oes-prev-attempt-card__title {
+  font-size: 15.5px;
+}
+
+.oes-prev-attempt-card__meta {
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+
+.oes-prev-attempt-card__score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 90px;
+}
+
+.oes-prev-attempt-card__score-value {
+  font-size: 13px;
+  color: var(--oes-text-secondary);
+  font-weight: 600;
+}
+
+.oes-prev-attempt-card__score-percent {
+  font-family: var(--oes-font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--oes-text-primary);
+}
+
+@media (max-width: 640px) {
+  .oes-prev-attempt-card { flex-direction: column; align-items: stretch; }
+  .oes-prev-attempt-card__score { align-items: flex-start; flex-direction: row; gap: 8px; }
+}

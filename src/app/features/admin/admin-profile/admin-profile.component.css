@@ -1,0 +1,46 @@
+.oes-admin-profile__header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.oes-admin-profile__name {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.oes-admin-profile__role {
+  font-size: 13px;
+}
+
+.oes-admin-profile__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.oes-admin-profile__form {
+  padding: 28px;
+}
+
+.oes-admin-profile__form-title {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.oes-admin-profile__field {
+  width: 100%;
+}
+
+.oes-admin-profile__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+  .oes-admin-profile__stats { grid-template-columns: 1fr; }
+}
